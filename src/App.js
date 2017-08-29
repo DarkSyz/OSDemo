@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect
+} from 'react-router-dom';
+
 import onesource_logo from './onesource_logo.svg';
 import sanofi_logo from './sanofi_logo.svg';
 import notification_icon from './notification.png';
@@ -8,12 +15,16 @@ import favorite_icon from './favorite.png';
 import logout_icon from './logout.png';
 import triangle_icon from './triangle.png';
 
-import { Menu, Icon, Input, Button, Checkbox, Row, Col } from 'antd';
+import { Calendar, Menu, Icon, Input, Button, Checkbox, Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 
 import { AgGridReact } from 'ag-grid-react';
 import '../node_modules/ag-grid/dist/styles/ag-grid.css';
 import '../node_modules/ag-grid/dist/styles/theme-fresh.css';
+
+import WelcomeComponent from './welcome';
+import MyCalendarComponent from './myCalendar';
+import ARCAdminComponent from './arcAdmin';
 
 const Logos = (props) =>
   <span className="logobar">
@@ -23,7 +34,7 @@ const Logos = (props) =>
   </span>
 
 const HeadMenuItem = (props) =>
-  <span className="header_menu_item">{props.title}<img src={props.icon} className="header_menu_icon" /></span>
+  <span className="header_menu_item">{props.title}<Icon className="header_menu_icon" type={props.type} /></span>
 
 class MainMenu extends Component {
   constructor(props) {
@@ -35,7 +46,7 @@ class MainMenu extends Component {
   render() {
     return (
       <Menu theme="dark" defaultSelectedKeys={[this.state.selectedKeys]} mode="horizontal" style={{ width: "100%", backgroundColor: "#09488a" }}>
-        <Menu.Item key="welcome">WELCOME</Menu.Item>
+        <Menu.Item key="welcome"><Link to='/home'>WELCOME</Link></Menu.Item>
         <Menu.SubMenu key="new-request" title="NEW REQUEST">
           <Menu.Item key="new-request:service-request" style={{ backgroundColor: "#09488a" }}>New Service Request</Menu.Item>
           <Menu.Item key="new-request:add-equipment-request" style={{ backgroundColor: "#09488a" }}>Add Equipment Request</Menu.Item>
@@ -54,24 +65,22 @@ class MainMenu extends Component {
           <Menu.Item key="help:dashboard" style={{ backgroundColor: "#09488a" }}>OneSource Dashboard</Menu.Item>
           <Menu.Item key="help:mobile-app" style={{ backgroundColor: "#09488a" }}>OneSource Mobile App</Menu.Item>
         </Menu.SubMenu>
-        <Menu.SubMenu key="my" title="MY">
-          <Menu.Item key="my:favorites" style={{ backgroundColor: "#09488a" }}>My Favorites</Menu.Item>
-          <Menu.Item key="my:calendar" style={{ backgroundColor: "#09488a" }}>My Calendar</Menu.Item>
-        </Menu.SubMenu>
+        <Menu.Item key="arc:admin"><Link to='/arc-admin'>ARC Admin</Link></Menu.Item>
+        <Menu.Item key="my"><Link to='/mycalendar'>MY</Link></Menu.Item>
       </Menu>
     );
   }
 }
 
 class Grid extends Component {
-  onGridReady(params){
+  onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
-  render(){
+  render() {
     return (
-      <div style={{width:800, height: 500}} className="ag-refresh">
+      <div style={{ width: 400, height: 800 }} className="ag-refresh">
         <AgGridReact columnDefs={[
           { headerName: 'Category', field: 'category' },
           { headerName: 'Name', field: 'name' },
@@ -85,9 +94,9 @@ class Grid extends Component {
           { category: "Electronics", price: "$199.99", stocked: true, name: "Nexus 7" },
         ]
         }
-        onGridReady={this.onGridReady.bind(this)}
+          onGridReady={this.onGridReady.bind(this)}
         >
-        </AgGridReact>      
+        </AgGridReact>
       </div>
     );
   }
@@ -104,16 +113,23 @@ class App extends Component {
         <div className="banner">
           <Logos customer_logo={sanofi_logo} />
           <span className="header_menu">
-            {/*}
+            {/*
             <HeadMenuItem title={"Notification"} icon={notification_icon} />
             <HeadMenuItem title={"Favorite"} icon={favorite_icon} />
             */}
-            <HeadMenuItem title={"Speh Christoph"} icon={triangle_icon} />
-            <HeadMenuItem title={"Logout"} icon={logout_icon} />
+            <HeadMenuItem title={"Speh Christoph"} type='caret-down' />
+            <HeadMenuItem title={"Logout"} type='logout' />
           </span>
         </div>
-        <MainMenu />
-        <Grid/>
+        <Router>
+          <div>
+          <MainMenu />
+          <Redirect exact from='/' to='/home' />
+          <Route path='/home' component={WelcomeComponent} />
+          <Route path='/mycalendar' component={MyCalendarComponent} />
+          <Route path='/arc-admin' component={ARCAdminComponent} />
+          </div>
+        </Router>
       </div >
     );
   }
