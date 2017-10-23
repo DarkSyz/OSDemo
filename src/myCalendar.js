@@ -34,10 +34,9 @@ export default class MyCalendarComponent extends Component {
         width: 150
       },
       {
-        title: 'Reserved By',
-        dataIndex: 'reservedBy',
-        key: 'reservedBy',
-        render: (text, record) => <a href={`mailto:${record.mailto}`}>{text}</a>,
+        title: 'Location',
+        dataIndex: 'location',
+        key: 'location',
         width: 150
       },
       {
@@ -54,6 +53,13 @@ export default class MyCalendarComponent extends Component {
         width: 150
       },
       {
+        title: 'Reserved By',
+        dataIndex: 'reservedBy',
+        key: 'reservedBy',
+        render: (text, record) => record.mailto ? <a href={`mailto:${record.mailto}`}>{text}</a> : <span>{text}</span>,
+        width: 150
+      },
+      {
         title: 'Comments',
         dataIndex: 'comments',
         key: 'comments',
@@ -63,19 +69,21 @@ export default class MyCalendarComponent extends Component {
     let dataSource = [
       {
         period: 'All-day',
-        reservedBy: 'Speh Christoph',
-        mailto: 'ben.chen@perkinelmer.com',
+        reservedBy: 'System',
+        mailto: '',
         OSTag: '99900011',
         systemNickName: '00011',
-        comments: 'Allday expeiment'
+        comments: 'Scheduled PM',
+        location: 'DEMO1'
       },
       {
         period: '9:00AM - 11:00AM',
-        reservedBy: 'Ben Chen',
+        reservedBy: 'Speh Christoph',
         mailto: 'ben.chen@perkinelmer.com',
         OSTag: '99960564',
         systemNickName: '60564',
-        comments: 'expeiment'
+        comments: 'expeiment',
+        location: 'DEMO1'
       },
       {
         period: '2:00PM - 4:00PM',
@@ -83,7 +91,8 @@ export default class MyCalendarComponent extends Component {
         mailto: 'ben.chen@perkinelmer.com',
         OSTag: '99960564',
         systemNickName: '60564',
-        comments: 'expeiment'
+        comments: 'expeiment',
+        location: 'DEMO1'
       },
       {
         period: '[start time] - [end time]',
@@ -91,9 +100,16 @@ export default class MyCalendarComponent extends Component {
         mailto: 'ben.chen@perkinelmer.com',
         OSTag: '[tag number]',
         systemNickName: '[system nick name]',
-        comments: '[Comments, at most 200 characters]'
+        comments: '[Comments, at most 200 characters]',
+        location: '[location]'
       },
     ]
+
+    function dateCellRender(value) {
+      return (
+        <div>123</div>
+      );
+    }
 
     return (
       <div style={{ display: 'flex', justifyContent: '1 1 auto', height: '100%' }}>
@@ -106,15 +122,22 @@ export default class MyCalendarComponent extends Component {
         </div>
 
         <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '8px' }}>
+            <span>{this.state.currentDate.format('Do MMM YYYY')}</span>
+            <span>{this.state.currentDate.format('dddd')}</span>
+          </div>
+
           <Calendar
             showDateInput={false}
             Select={() => null}
-            showToday={false}
+            dateCellRender={dateCellRender}
+            showToday={true}
             onSelect={date => this.setState({ currentDate: date })}
           />
+
           <Card title='Location'>
-            <div style={{display:'flex', flexDirection:'column'}}>
-              <Checkbox>BOSTOM</Checkbox>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <Checkbox>BOSTON</Checkbox>
               <Checkbox defaultChecked>DEMO1</Checkbox>
               <Checkbox>DEMO10</Checkbox>
               <Checkbox>DEMO11</Checkbox>
@@ -125,8 +148,8 @@ export default class MyCalendarComponent extends Component {
               <Checkbox>DEMO5</Checkbox>
               <Checkbox>DEMO6</Checkbox>
               <Checkbox>DEMO7</Checkbox>
-              <Checkbox>DEMO8</Checkbox>                            
-              <Checkbox>DEMO9</Checkbox>                            
+              <Checkbox>DEMO8</Checkbox>
+              <Checkbox>DEMO9</Checkbox>
             </div>
           </Card>
         </div>
@@ -140,7 +163,7 @@ export default class MyCalendarComponent extends Component {
             onSelect={date => this.setState({ currentDate: date })}
           />
         </div>
-*/}
+        */}
         <Card title='Scheduled'>
           <Table columns={columns} dataSource={dataSource} pagination={{ pageSize: 10 }} />
         </Card>

@@ -24,7 +24,6 @@ import '../node_modules/ag-grid/dist/styles/theme-fresh.css';
 
 import WelcomeComponent from './welcome';
 import MyCalendarComponent from './myCalendar';
-import ARCAdminComponent from './arcAdmin';
 
 const Logos = (props) =>
   <span className="logobar">
@@ -47,6 +46,7 @@ class MainMenu extends Component {
     return (
       <Menu theme="dark" defaultSelectedKeys={[this.state.selectedKeys]} mode="horizontal" style={{ width: "100%", backgroundColor: "#09488a" }}>
         <Menu.Item key="welcome"><Link to='/home'>WELCOME</Link></Menu.Item>
+        <Menu.Item key="my"><Link to='/mycalendar'>MY</Link></Menu.Item>
         <Menu.SubMenu key="new-request" title="NEW REQUEST">
           <Menu.Item key="new-request:service-request" style={{ backgroundColor: "#09488a" }}>New Service Request</Menu.Item>
           <Menu.Item key="new-request:add-equipment-request" style={{ backgroundColor: "#09488a" }}>Add Equipment Request</Menu.Item>
@@ -65,8 +65,6 @@ class MainMenu extends Component {
           <Menu.Item key="help:dashboard" style={{ backgroundColor: "#09488a" }}>OneSource Dashboard</Menu.Item>
           <Menu.Item key="help:mobile-app" style={{ backgroundColor: "#09488a" }}>OneSource Mobile App</Menu.Item>
         </Menu.SubMenu>
-        <Menu.Item key="arc:admin"><Link to='/arc-admin'>ARC Admin</Link></Menu.Item>
-        <Menu.Item key="my"><Link to='/mycalendar'>MY</Link></Menu.Item>
       </Menu>
     );
   }
@@ -127,7 +125,6 @@ class App extends Component {
           <Redirect exact from='/' to='/home' />
           <Route path='/home' component={WelcomeComponent} />
           <Route path='/mycalendar' component={MyCalendarComponent} />
-          <Route path='/arc-admin' component={ARCAdminComponent} />
           </div>
         </Router>
       </div >
